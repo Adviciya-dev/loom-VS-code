@@ -1,0 +1,360 @@
+{
+  "name": "loom-vscode",
+  "displayName": "Loom (Adviciya)",
+  "description": "Manage your Loom tasks without leaving VS Code.",
+  "version": "0.1.0",
+  "publisher": "adviciya",
+  "private": true,
+  "license": "UNLICENSED",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "loom",
+          "title": "Loom",
+          "icon": "media/loom-activity.svg"
+        }
+      ]
+    },
+    "views": {
+      "loom": [
+        {
+          "type": "webview",
+          "id": "loom.login",
+          "name": "Sign In",
+          "when": "!loom.authenticated"
+        },
+        {
+          "id": "loom.account",
+          "name": "Account",
+          "when": "loom.authenticated",
+          "type": "webview"
+        },
+        {
+          "id": "loom.tasks",
+          "name": "My Tasks",
+          "when": "loom.authenticated"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "loom.login",
+        "title": "Sign In",
+        "category": "Loom",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "loom.logout",
+        "title": "Sign Out",
+        "category": "Loom",
+        "icon": "$(sign-out)"
+      },
+      {
+        "command": "loom.refreshTasks",
+        "title": "Refresh Tasks",
+        "category": "Loom",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "loom.search",
+        "title": "Search Tasks…",
+        "category": "Loom",
+        "icon": "$(search)"
+      },
+      {
+        "command": "loom.filter",
+        "title": "Filter Tasks…",
+        "category": "Loom",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "loom.clearFilters",
+        "title": "Clear Search and Filters",
+        "category": "Loom",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "loom.openTask",
+        "title": "Open Task…",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.viewTaskDetails",
+        "title": "View Task Details",
+        "category": "Loom",
+        "icon": "$(preview)"
+      },
+      {
+        "command": "loom.openInBrowser",
+        "title": "Open in Loom",
+        "category": "Loom",
+        "icon": "$(link-external)"
+      },
+      {
+        "command": "loom.copyTaskKey",
+        "title": "Copy Task Key",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.createTask",
+        "title": "Create Task…",
+        "category": "Loom",
+        "icon": "$(add)"
+      },
+      {
+        "command": "loom.assignTask",
+        "title": "Assign Task…",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.changeStatus",
+        "title": "Change Status…",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.changePriority",
+        "title": "Change Priority…",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.addComment",
+        "title": "Add Comment…",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.showLogs",
+        "title": "Show Logs",
+        "category": "Loom"
+      },
+      {
+        "command": "loom.linkProject",
+        "title": "Link Workspace to Loom Project",
+        "category": "Loom",
+        "icon": "$(link)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "loom.login",
+          "when": "!loom.authenticated"
+        },
+        {
+          "command": "loom.logout",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.refreshTasks",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.search",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.filter",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.clearFilters",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.openTask",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.createTask",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.assignTask",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.changeStatus",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.changePriority",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.addComment",
+          "when": "loom.authenticated"
+        },
+        {
+          "command": "loom.viewTaskDetails",
+          "when": "false"
+        },
+        {
+          "command": "loom.openInBrowser",
+          "when": "false"
+        },
+        {
+          "command": "loom.copyTaskKey",
+          "when": "false"
+        },
+        {
+          "command": "loom.linkProject",
+          "when": "loom.authenticated"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "loom.createTask",
+          "when": "view == loom.tasks",
+          "group": "navigation@1"
+        },
+        {
+          "command": "loom.search",
+          "when": "view == loom.tasks",
+          "group": "navigation@2"
+        },
+        {
+          "command": "loom.filter",
+          "when": "view == loom.tasks",
+          "group": "navigation@3"
+        },
+        {
+          "command": "loom.refreshTasks",
+          "when": "view == loom.tasks",
+          "group": "navigation@4"
+        },
+        {
+          "command": "loom.clearFilters",
+          "when": "view == loom.tasks && loom.filtersActive",
+          "group": "1_view@2"
+        },
+        {
+          "command": "loom.logout",
+          "when": "view == loom.account",
+          "group": "navigation@1"
+        },
+        {
+          "command": "loom.showLogs",
+          "when": "view == loom.account",
+          "group": "1_misc@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "loom.openInBrowser",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "inline@1"
+        },
+        {
+          "command": "loom.viewTaskDetails",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "1_open@1"
+        },
+        {
+          "command": "loom.openInBrowser",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "1_open@2"
+        },
+        {
+          "command": "loom.copyTaskKey",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "1_open@3"
+        },
+        {
+          "command": "loom.changeStatus",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "2_edit@1"
+        },
+        {
+          "command": "loom.changePriority",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "2_edit@2"
+        },
+        {
+          "command": "loom.assignTask",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "2_edit@3"
+        },
+        {
+          "command": "loom.addComment",
+          "when": "view == loom.tasks && viewItem == loomTask",
+          "group": "2_edit@4"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Loom",
+      "properties": {
+        "loom.apiBaseUrl": {
+          "type": "string",
+          "default": "https://loom.adviciya.com/api/v1",
+          "description": "Base URL of the Loom REST API."
+        },
+        "loom.webBaseUrl": {
+          "type": "string",
+          "default": "https://loom.adviciya.com",
+          "description": "Base URL of the Loom web application."
+        },
+        "loom.taskUrlTemplate": {
+          "type": "string",
+          "default": "{webBaseUrl}/projects/{projectId}/tasks?task={taskId}",
+          "markdownDescription": "URL used by **Open in Loom**. Placeholders: `{webBaseUrl}`, `{taskId}`, `{projectId}`, `{taskKey}`, `{taskNumber}`."
+        },
+        "loom.auth.refreshPath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path (relative to `#loom.apiBaseUrl#`) of the token refresh endpoint, e.g. `/auth/refresh`. The endpoint is **not yet confirmed**, so leave this empty until it is. When empty, you are asked to sign in again before your session expires. The endpoint is expected to accept `{ \"refreshToken\": string }` and return `{ accessToken, refreshToken? }`."
+        },
+        "loom.pageSize": {
+          "type": "number",
+          "default": 25,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Number of tasks fetched per page."
+        }
+      }
+    },
+    "viewsWelcome": [
+      {
+        "view": "loom.tasks",
+        "when": "loom.authenticated && !loom.hasFolder",
+        "contents": "This isn't a Loom project: no folder is open.\n\nOpen your project folder. If it has a `.loom` file, its tasks appear here.\n[Open Folder](command:vscode.openFolder)"
+      },
+      {
+        "view": "loom.tasks",
+        "when": "loom.authenticated && loom.hasFolder && !loom.hasProject",
+        "contents": "This isn't a Loom project.\n\nTo see your tasks here, add a `.loom` file to the workspace root containing:\n`project=<Loom project ID>`\n[Link to Loom Project](command:loom.linkProject)"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "package": "node esbuild.mjs --production",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "vscode:prepublish": "npm run typecheck && npm run package",
+    "vsix": "vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "sanitize-html": "^2.13.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/sanitize-html": "^2.11.0",
+    "@types/vscode": "1.90.0",
+    "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
