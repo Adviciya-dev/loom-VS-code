@@ -12,3 +12,7 @@ vitest.config.ts
 Doc.md
 icon.svg
 .loom
+PUBLISHING.md
+azure-pipelines.yml
+.gitignore
+package-lock.json

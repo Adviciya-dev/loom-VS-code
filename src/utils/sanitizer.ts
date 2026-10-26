@@ -63,18 +63,21 @@ const ENTITIES: Record<string, string> = {
 };
 
 function decodeEntities(text: string): string {
-  return text.replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (match, entity: string) => {
+  // `fromCodePoint` throws on values above 0x10FFFF, so out-of-range references stay as written.
+  const fromCode = (code: number, match: string) =>
+    Number.isInteger(code) && code >= 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)
+      ? String.fromCodePoint(code)
+      : match;
+  return text.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (match, entity: string) => {
     const lower = entity.toLowerCase();
     if (lower in ENTITIES) {
       return ENTITIES[lower];
     }
     if (lower.startsWith('#x')) {
-      const code = parseInt(lower.slice(2), 16);
-      return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+      return fromCode(parseInt(lower.slice(2), 16), match);
     }
     if (lower.startsWith('#')) {
-      const code = parseInt(lower.slice(1), 10);
-      return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+      return fromCode(parseInt(lower.slice(1), 10), match);
     }
     return match;
   });

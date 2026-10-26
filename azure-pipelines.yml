@@ -1,0 +1,38 @@
+trigger:
+  tags:
+    include:
+      - v*
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    displayName: Use Node 20
+    inputs:
+      versionSpec: 20.x
+
+  - script: |
+      npm ci
+      npm run typecheck
+      npm test
+    displayName: Install, typecheck, test
+
+  - script: |
+      tag="${BUILD_SOURCEBRANCH#refs/tags/v}"
+      version="$(node -p "require('./package.json').version")"
+      if [ "$tag" != "$version" ]; then
+        echo "Tag v$tag does not match package.json version $version"
+        exit 1
+      fi
+    displayName: Check tag matches package.json version
+
+  - task: AzureCLI@2
+    displayName: Publish to Marketplace
+    inputs:
+      azureSubscription: loom-vscode-publisher-connection
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        npx vsce publish --azure-credential --no-dependencies
