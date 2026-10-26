@@ -155,7 +155,7 @@ export class AuthManager implements TokenProvider {
     try {
       result = await this.opts.authApi.login(email, password);
     } catch (err) {
-      if (err instanceof UnauthorizedError || (err instanceof LoomApiError && [400, 403, 404, 422].includes(err.status ?? 0))) {
+      if (err instanceof UnauthorizedError || (err instanceof LoomApiError && [400, 403, 422].includes(err.status ?? 0))) {
         this.lastFailedLoginAt = this.now();
         this.opts.logger.info('Sign-in rejected by Loom');
         throw new InvalidCredentialsError(err.status === 401 || !err.message ? 'Invalid email or password.' : err.message);

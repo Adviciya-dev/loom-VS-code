@@ -1,17 +1,31 @@
 {
   "name": "loom-vscode",
   "displayName": "Loom (Adviciya)",
-  "description": "Manage your Loom tasks without leaving VS Code.",
+  "description": "View and manage your Loom tasks from the VS Code sidebar: sign in, see tasks assigned to you, open details, change status and jump to Loom.",
   "version": "0.1.0",
   "publisher": "adviciya",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Adviciya-dev/loom-VS-code.git"
+  },
+  "homepage": "https://loom.adviciya.com",
+  "bugs": {
+    "url": "https://github.com/Adviciya-dev/loom-VS-code/issues"
+  },
   "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.90.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "loom",
+    "adviciya",
+    "tasks",
+    "project management",
+    "task management"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
@@ -296,22 +310,26 @@
         "loom.apiBaseUrl": {
           "type": "string",
           "default": "https://loom.adviciya.com/api/v1",
-          "description": "Base URL of the Loom REST API."
+          "description": "Base URL of the Loom REST API.",
+          "scope": "machine"
         },
         "loom.webBaseUrl": {
           "type": "string",
           "default": "https://loom.adviciya.com",
-          "description": "Base URL of the Loom web application."
+          "description": "Base URL of the Loom web application.",
+          "scope": "machine"
         },
         "loom.taskUrlTemplate": {
           "type": "string",
           "default": "{webBaseUrl}/projects/{projectId}/tasks?task={taskId}",
-          "markdownDescription": "URL used by **Open in Loom**. Placeholders: `{webBaseUrl}`, `{taskId}`, `{projectId}`, `{taskKey}`, `{taskNumber}`."
+          "markdownDescription": "URL used by **Open in Loom**. Placeholders: `{webBaseUrl}`, `{taskId}`, `{projectId}`, `{taskKey}`, `{taskNumber}`.",
+          "scope": "machine"
         },
         "loom.auth.refreshPath": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Path (relative to `#loom.apiBaseUrl#`) of the token refresh endpoint, e.g. `/auth/refresh`. The endpoint is **not yet confirmed**, so leave this empty until it is. When empty, you are asked to sign in again before your session expires. The endpoint is expected to accept `{ \"refreshToken\": string }` and return `{ accessToken, refreshToken? }`."
+          "markdownDescription": "Path (relative to `#loom.apiBaseUrl#`) of the token refresh endpoint, e.g. `/auth/refresh`. The endpoint is **not yet confirmed**, so leave this empty until it is. When empty, you are asked to sign in again before your session expires. The endpoint is expected to accept `{ \"refreshToken\": string }` and return `{ accessToken, refreshToken? }`.",
+          "scope": "machine"
         },
         "loom.pageSize": {
           "type": "number",
@@ -356,5 +374,11 @@
     "esbuild": "^0.24.0",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Loom connection settings are only read from user settings, never from the workspace."
+    }
   }
 }

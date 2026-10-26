@@ -71,7 +71,9 @@ export class HttpTransport {
       try {
         return await this.attempt(url, opts);
       } catch (err) {
-        const retryable = err instanceof NetworkError || (err instanceof LoomApiError && (err.status ?? 0) >= 500);
+        // Only GET is retried: replaying a POST/PATCH could create duplicate tasks or comments.
+        const retryable =
+          opts.method === 'GET' && (err instanceof NetworkError || (err instanceof LoomApiError && (err.status ?? 0) >= 500));
         if (!retryable || attempt >= this.maxRetries) {
           throw err;
         }
