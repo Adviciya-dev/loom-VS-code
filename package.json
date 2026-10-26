@@ -1,7 +1,7 @@
 {
   "name": "loom-vscode",
   "displayName": "Loom (Adviciya)",
-  "description": "Manage your Loom tasks without leaving VS Code.",
+  "description": "View and manage your Loom tasks from the VS Code sidebar: sign in, see tasks assigned to you, open details, change status and jump to Loom.",
   "version": "0.1.0",
   "publisher": "adviciya",
   "license": "SEE LICENSE IN LICENSE",
@@ -9,12 +9,23 @@
     "type": "git",
     "url": "https://github.com/Adviciya-dev/loom-VS-code.git"
   },
+  "homepage": "https://loom.adviciya.com",
+  "bugs": {
+    "url": "https://github.com/Adviciya-dev/loom-VS-code/issues"
+  },
   "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.90.0"
   },
   "categories": [
     "Other"
+  ],
+  "keywords": [
+    "loom",
+    "adviciya",
+    "tasks",
+    "project management",
+    "task management"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",

@@ -1,81 +1,127 @@
-# Loom for VS Code
+# Loom (Adviciya) for VS Code
 
-Manage Loom (Adviciya) tasks from the VS Code sidebar.
+**See and work on your Loom tasks without leaving your editor.**
 
-**Milestone 1 (done):** open VS Code → click Loom → sign in → stay signed in → see your profile → see your assigned tasks.
+Loom is the task and project management platform built by [Adviciya Solutions](https://loom.adviciya.com). This extension brings the tasks assigned to you into the VS Code sidebar, so you can check what is next, read the details, update a status and jump to the full task in Loom, all without switching windows.
 
-## Develop
-
-```bash
-npm install
-npm run build        # bundle to dist/ (esbuild)
-npm test             # unit tests (vitest), no VS Code needed
-npm run typecheck
-npm run vsix         # package loom-vscode-<version>.vsix
-```
-
-Press **F5** in VS Code to launch an Extension Development Host with the extension loaded.
+> You need a Loom account to use this extension. Sign in with the same email and password you use at [loom.adviciya.com](https://loom.adviciya.com).
 
 ## Features
 
-- **Activity Bar → Loom.** When signed out, the sidebar shows a sign-in form. When signed in, it shows **Account** and **My Tasks**.
-- **My Tasks:** the tasks assigned to you (`assigneeId` = your user ID) in the workspace's Loom project, always grouped by status (Done and Live Build start collapsed), with subtasks nested under their parents.
-- **Account:** your profile and a task overview for the project: a donut chart by status with percent done in the middle, a status legend (click one to show only that status in My Tasks), and Remaining / Overdue / Due ≤ 7 days / Blocked tiles. The Loom icon shows a badge with the remaining count.
-- **Not a Loom project:** if the workspace has no `.loom` file, nothing is fetched. The view says so and offers **Link to Loom Project**, which writes the file for you.
-- **Search and filter** (client-side), **refresh**, and a task **detail view** with a sanitized description.
-- **Open in Loom**, **Copy key**, and context-menu actions.
-- **Commands** (all in the Command Palette under the `Loom:` prefix): sign in/out, link workspace to a project, refresh, search, filter, open task, create/assign/change status/change priority/add comment.
+### Sign in once, stay signed in
+- Click the **Loom** icon in the Activity Bar and sign in with your email and password.
+- Your session is stored in VS Code's secure storage (your operating system's keychain). Your password is never stored.
+- You stay signed in across restarts. If your session expires, you are asked to sign in again.
+- Sign out at any time from the Account view.
 
-## Project scope (`.loom`)
+### My Tasks
+- Shows the tasks **assigned to you** in the Loom project linked to your workspace.
+- Tasks are grouped by status. *Done* and *Live Build* start collapsed.
+- Subtasks are nested under their parent task.
+- Each row shows the task key, title, priority, due date and a short preview of the description.
+- **Search** by key, title or project, and **filter** by status, then **clear** both in one click.
 
-Put a `.loom` file in the root of a workspace folder to show only that project's tasks:
+### Account overview
+- Your profile and a summary of your work in the linked project.
+- A donut chart by status, with the percentage done in the middle. Click a status in the legend to show only those tasks.
+- Tiles for **Remaining**, **Overdue**, **Due within 7 days** and **Blocked**.
+- A badge on the Loom icon shows how many tasks remain.
+
+### Task details
+Open any task to see a full detail page:
+- Title, key, project, type, status, priority and blocked or approval state.
+- The formatted description (sanitized for safety), including lists, code blocks, links and tables.
+- Assignee, start and due dates (with an overdue warning), parent task, subtask and dependency progress, sprint, time estimate, approvers and activity timestamps.
+
+### Quick actions
+Right-click a task, or use the buttons on the detail page:
+- **Open in Loom** opens the task in your browser.
+- **Copy Task Key** copies a key such as `THE-129`.
+- **Change Status** moves the task to a new status.
+- **Change Priority**, **Assign** and **Add Comment** are present but currently turned off. They will be enabled as the Loom API endpoints they need become available.
+
+## Getting started
+
+1. Install the extension.
+2. Click the **Loom** icon in the Activity Bar and **sign in**.
+3. Open your project folder in VS Code.
+4. Link the folder to a Loom project (see below). Your assigned tasks appear under **My Tasks**.
+
+### Link a workspace to a Loom project
+Put a file named `.loom` in the root of your workspace folder:
 
 ```
-project=9cc074ac-6a05-4373-a6fc-8d2b69b77294
+project=<your Loom project ID>
 ```
 
-- Several projects: one `project=` line each, or comma-separated.
-- All of your assigned tasks are fetched and filtered to the project client-side, since the API has no documented project filter. So there is no paging.
-- The file is watched, so edits apply immediately. Without it, the workspace is treated as not a Loom project.
+Or run **Loom: Link Workspace to Loom Project** from the Command Palette, which creates the file for you.
 
-Subtasks are nested under their parent when the parent is also in the list; otherwise they appear at the top level. **Open in Loom** adds `taskProject=<projectId>` for subtasks.
+- To show several projects, add one `project=` line for each, or separate the IDs with commas.
+- Lines starting with `#` are comments.
+- The file is watched, so changes apply immediately.
+- A workspace with no `.loom` file is treated as "not a Loom project", and no tasks are fetched.
+
+## Commands
+
+All commands are in the Command Palette (`Ctrl/Cmd+Shift+P`) under the **Loom:** prefix.
+
+| Command | What it does |
+|---|---|
+| Sign In / Sign Out | Start or end your Loom session |
+| Refresh Tasks | Reload your tasks from Loom |
+| Search Tasks… | Search by key, title or project |
+| Filter Tasks… | Filter by status |
+| Clear Search and Filters | Show all your tasks again |
+| Open Task… | Pick a task and open its detail page |
+| View Task Details | Open the detail page for the selected task |
+| Open in Loom | Open the task in your browser |
+| Copy Task Key | Copy the task key to the clipboard |
+| Change Status… | Move a task to another status |
+| Link Workspace to Loom Project | Create the `.loom` file for this folder |
+| Show Logs | Open the Loom output channel for troubleshooting |
 
 ## Settings
 
-| Setting | Default | Notes |
+Settings are under **Settings → Extensions → Loom**. The connection settings can only be changed in your **user** settings, not per workspace. This stops an untrusted project from redirecting your sign-in to another server.
+
+| Setting | Default | Description |
 |---|---|---|
-| `loom.apiBaseUrl` | `https://loom.adviciya.com/api/v1` | |
-| `loom.webBaseUrl` | `https://loom.adviciya.com` | |
-| `loom.taskUrlTemplate` | `{webBaseUrl}/projects/{projectId}/tasks?task={taskId}` | |
-| `loom.auth.refreshPath` | *(empty)* | Refresh endpoint is unconfirmed. When it is empty, the user is asked to sign in again ~60s before expiry. |
-| `loom.pageSize` | `25` | |
+| `loom.apiBaseUrl` | `https://loom.adviciya.com/api/v1` | Base URL of the Loom REST API |
+| `loom.webBaseUrl` | `https://loom.adviciya.com` | Base URL of the Loom web app |
+| `loom.taskUrlTemplate` | `{webBaseUrl}/projects/{projectId}/tasks?task={taskId}` | URL used by **Open in Loom**. Placeholders: `{webBaseUrl}`, `{taskId}`, `{projectId}`, `{taskKey}`, `{taskNumber}` |
+| `loom.auth.refreshPath` | *(empty)* | Optional token-refresh endpoint. Leave empty unless your administrator tells you otherwise |
+| `loom.pageSize` | `25` | Number of tasks fetched per page (1–100) |
 
-No environment variables or `.env` files are used, so there is no `.env.example`. `.env` is still listed in `.gitignore` as a safeguard.
+## Privacy and security
 
-## Architecture
+- Your access and refresh tokens are kept in VS Code's `SecretStorage`. Your password is sent only to the Loom sign-in endpoint and is never saved.
+- Tokens, passwords and `Authorization` headers are never written to logs.
+- Task descriptions are sanitized before display, and the detail page runs under a strict content security policy with no remote content.
+- The extension talks only to the Loom server configured in `loom.apiBaseUrl`. It collects no telemetry.
 
-```
-src/
-  api/        HttpTransport (timeout, retries, envelope check), AuthApi, LoomClient (401 flow, cache), TaskWriteApi
-  auth/       AuthManager (session, single-flight renewal, throttle), TokenManager (SecretStorage, JWT exp)
-  models/     Task, User (+ Zod schemas)
-  services/   TaskService (state), taskQueries (filter/group)
-  views/      LoginView (webview), LoomTreeProvider, AccountView (webview), TaskDetailView (webview)
-  commands/   one module per command group
-  utils/      logger (redaction), sanitizer, formatters
-```
+## Requirements
 
-Everything under `api/`, `auth/`, `models/`, `services/` and `utils/` is free of `vscode` imports, so it is unit-tested in plain Node.
+- VS Code 1.90 or later
+- A Loom account at your organization's Loom server
 
-## API assumptions to confirm
+## Troubleshooting
 
-1. **`/general-tasks/page` response shape.** The parser accepts `data` as either an array or an object.
-   - Items are read from `items`, `tasks`, `data`, `rows` or `results`.
-   - Paging metadata is read from the top level, `pagination` or `meta`: `total` / `totalCount`, `page` / `currentPage`, `pageSize` / `limit`, `totalPages`.
-   - Pages are assumed to be **1-based**.
-2. **`/auth/me`** may return the user directly or wrapped as `{ user }`. Both are accepted.
-3. **Write endpoints.** **Change status is implemented**:
-   - `PATCH /projects/{projectId}/general-tasks/{taskId}` with every editable field (title, description, status, priority, type, assigneeIds, startDate, dueDate, requiresApproval, approverIds, customFields, timeEstimateMinutes, sprintId), the same body the Loom web app sends.
-   - The response omits list-only fields (project name, prefix, parent title, counts), so it is merged over the task already loaded. The list updates in place without refetching.
-   - Create, assign, priority, edit and comment are **not implemented**. `LoomTaskWriteApi` refuses them (search `TODO(loom-api)`). To enable one, implement it there and add it to `SUPPORTED`.
-4. **Assignee names:** tasks only carry `assigneeIds` and there is no users endpoint yet. Assignees therefore show as "You", "You + N others" or a count.
+| Problem | What to try |
+|---|---|
+| "This isn't a Loom project" | Add a `.loom` file with your project ID, or run **Loom: Link Workspace to Loom Project** |
+| Tasks do not appear | Run **Loom: Refresh Tasks**. Only tasks assigned to you in the linked project are shown |
+| Signed out unexpectedly | Your session expired. Sign in again |
+| "Could not reach Loom" | Check your network connection and `loom.apiBaseUrl` |
+| Something else | Run **Loom: Show Logs** and include the output when you contact us |
+
+## Support and company
+
+**Adviciya Solutions** builds Loom, a task and project management platform for teams.
+
+- Loom: [loom.adviciya.com](https://loom.adviciya.com)
+- Source and issue tracker: [github.com/Adviciya-dev/loom-VS-code](https://github.com/Adviciya-dev/loom-VS-code)
+- Report a bug or request a feature: [open an issue](https://github.com/Adviciya-dev/loom-VS-code/issues)
+
+## License
+
+Copyright © 2026 Adviciya Solutions. All rights reserved. This software is proprietary. See the [LICENSE](LICENSE) file.

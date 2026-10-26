@@ -16,3 +16,4 @@ PUBLISHING.md
 azure-pipelines.yml
 .gitignore
 package-lock.json
+DEVELOPMENT.md
